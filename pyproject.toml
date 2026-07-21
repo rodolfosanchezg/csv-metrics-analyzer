@@ -1,0 +1,12 @@
+[project]
+name = "csv-analyzer"
+version = "0.1.0"
+description = "Producir indicadores que ayuden a tomar decisiones a partir de un CSV"
+requires-python = ">=3.11"
+dependencies = []
+
+[project.scripts]
+csv-analyzer = "csv_analizer.cli:main"
+
+[project.optional-dependencies]
+dev = ["pytest>=8.0.0"]
