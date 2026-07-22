@@ -1,0 +1,11 @@
+agente,categoria,estado,prioridad,fecha_creacion,fecha_cierre
+ana,soporte,cerrado,2,2026-01-05,2026-01-07
+luis,ventas,cerrado,1,2026-01-06,2026-01-06
+ana,soporte,abierto,3,2026-01-10,
+carla,facturacion,cerrado,1,2026-01-08,2026-01-12
+luis,soporte,abierto,2,2026-01-11,
+ana,ventas,cerrado,1,2026-01-09,2026-01-09
+carla,soporte,abierto,3,2026-01-12,
+luis,facturacion,cerrado,2,2026-01-07,2026-01-10
+ana,facturacion,abierto,1,2026-01-13,
+carla,ventas,cerrado,2,2026-01-04,2026-01-06
