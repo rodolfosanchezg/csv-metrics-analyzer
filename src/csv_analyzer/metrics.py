@@ -1,13 +1,60 @@
 # src/csv_analyzer/metrics.py
+"""Calcula indicadores operativos a partir de una lista de tickets."""
+
+from datetime import date
 
 def count_total(tickets: list[dict]) -> int: 
     """Cuenta el numero total de tickets."""
+    return len(tickets)
+
+def count_resolved(tickets: list[dict]) -> int:
+    """Cuenta cuantos tickets estan en estado 'cerrado'."""
+    return sum(1 for t in tickets if t["estado"] == "cerrado")
 
 def calculate_resolved_percentage(tickets: list[dict]) -> float:
-    """Calcula el porcentaje de tickets en estado 'cerrado'."""
+    """Calcula el porcentaje de tickets resueltos. Retorna 0.0 si no hay tickets."""
+    total = count_total(tickets)
+    if total == 0:
+        return 0.0
+    return count_resolved(tickets) / total * 100
+
+def _parse_iso_date(fecha_str: str) -> date | None:
+    """Convierte un string ISO (YYYY-MM-DD) a date. Retorna None si el formato  es invalido."""
+    try:
+        return date.fromisoformat(fecha_str)
+    except (ValueError, TypeError):
+        return None
 
 def calculate_average_resolution_time(tickets: list[dict]) -> float | None:
-    """Calcula el tiempo promedio de resolucion en dias. None si no hay tickets cerrados. """
+    """Calcula el tiempo promedio de resolucion en dias, sobre tickets cerrados
+    con fechas validas. 
+    
+    Retorna None si no hay tickets cerrados con fechas validas para calcular,
+    en vez de lanzar una excepcion o retornar un valor engañoso como 0. 
+    
+    """
+    duraciones: list[int] = []
+
+    for t in tickets:
+        if t["estado"] != "cerrado":
+            continue
+
+        fecha_creacion = _parse_iso_date(t["fecha_creacion"])
+        fecha_cierre = _parse_iso_date(t["fecha_cierre"])
+
+        if fecha_creacion is None or fecha_cierre is None:
+            continue
+
+        dias = (fecha_cierre - fecha_creacion).days
+        if dias < 0:
+            continue                # descarta datos inconsistentes (cierra antes que creacion)
+
+        duraciones.append(dias)
+
+        if not duraciones:
+            return None
+        
+        return sum(duraciones) / len(duraciones)
 
 def calculate_load_by_agent(tickets: list[dict]) -> dict[str, int]:
     """Calcula cuantos tickets tiene asignado cada agente."""
