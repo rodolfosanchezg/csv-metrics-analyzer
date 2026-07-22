@@ -2,6 +2,7 @@
 """Calcula indicadores operativos a partir de una lista de tickets."""
 
 from datetime import date
+from collections import Counter
 
 def count_total(tickets: list[dict]) -> int: 
     """Cuenta el numero total de tickets."""
@@ -57,13 +58,41 @@ def calculate_average_resolution_time(tickets: list[dict]) -> float | None:
         return sum(duraciones) / len(duraciones)
 
 def calculate_load_by_agent(tickets: list[dict]) -> dict[str, int]:
-    """Calcula cuantos tickets tiene asignado cada agente."""
+    """Calcula cuantos tickets tiene asignado cada agente.
+    
+    Reutiliza Counter en vez de un bucle manual con .get(), evitandoo duplicar
+    la misma logica de acumulacion.
+
+    """
+    return dict(Counter(t["agente"] for t in tickets))
 
 def top_categories(tickets: list[dict], n: int = 5) -> list[tuple[str, int]]:
-    """Retorna las n categorias con mas tickets, ordenadas de mayor a menor."""
+    """Retorna las n categorias con mas tickets, ordenadas de mayor a menor.
+    
+    Si hay menos de n categorias distintas, retorna todas las disponibles
+    sin lanzar error. 
+
+    """
+    conteo = Counter(t["categoria"] for t in tickets)
+
+    return conteo.most_common(n)
 
 def oldest_open_tickets(tickets:list[dict], n: int = 5) -> list[dict]:
-    """Retorna los n tickets abiertos mas antiguos, ordenados por fecha de creacion."""
+    """Retorna los n tickets abiertos mas antiguos, ordenados por fecha de 
+    creacion ascendente (el mas antiguo primero).
+    
+    Los tickets con fecha_creacion invalida o vacia se excluyen del resultado, 
+    en vez de romper el ordenamiento o aparecer en una posicion arbitraria.
+
+    """
+
+    abiertos = [
+        t for t in tickets
+        if t["estado"] == "abierto" and _parse_iso_date(t["fecha_creacion"]) is not None
+    ]
+    ordenados = sorted(abiertos, key=lambda t: t["fecha_creacion"])
+
+    return ordenados[:n]
 
 def build_summary(tickets: list[dict]) -> dict:
     """Consolida todos los indicadores anteriores en un unico diccionario de resumen."""
