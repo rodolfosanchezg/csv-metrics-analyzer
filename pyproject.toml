@@ -1,7 +1,7 @@
 [project]
-name = "csv-analyzer"
+name = "csv-metrics-analyzer"
 version = "0.1.0"
-description = "Producir indicadores que ayuden a tomar decisiones a partir de un CSV"
+description = "Analizador de indicadores operativos a partir de un CSV de tickets"
 requires-python = ">=3.11"
 dependencies = []
 
