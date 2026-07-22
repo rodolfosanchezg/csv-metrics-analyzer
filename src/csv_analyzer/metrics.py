@@ -95,4 +95,23 @@ def oldest_open_tickets(tickets:list[dict], n: int = 5) -> list[dict]:
     return ordenados[:n]
 
 def build_summary(tickets: list[dict]) -> dict:
-    """Consolida todos los indicadores anteriores en un unico diccionario de resumen."""
+    """Consolida todos los indicadores anteriores en un unico diccionario 
+    de resumen, listo para ser exportado por output.py
+    
+    No aplica filtros: recibe la lista de tickets ya filtrada (si aplica) desde
+    cli.py, manteniendo la separacion entre filtrado y calculo.
+    
+    """
+
+    return {
+        "total_tickets": count_total(tickets),
+        "resueltos": count_resolved(tickets),
+        "porcentaje_resuelto": calculate_resolved_percentage(tickets),
+        "tiempo_promedio_resolucion_dias": calculate_average_resolution_time(tickets),
+        "carga_por_agente": calculate_load_by_agent(tickets),
+        "top_categorias": top_categories(tickets, n=5),
+        "tickets_abiertos_mas_antiguos": [
+            {"agente": t["agente"], "categoria": t["categoria"], "fecha_creacion": t["fecha_creacion"]}
+            for t in oldest_open_tickets(tickets, n=5)
+        ],
+    }
