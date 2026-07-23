@@ -15,7 +15,7 @@ propenso a errores. Esta herramienta automatiza ese análisis.
 Requiere Python 3.11 o superior.
 
 ```bash
-git clone https://github.com/TU-USUARIO/csv-metrics-analyzer.git
+git clone https://github.com/rodolfosanchezg/csv-metrics-analyzer.git
 cd csv-metrics-analyzer
 python -m venv .venv
 
