@@ -52,10 +52,10 @@ def calculate_average_resolution_time(tickets: list[dict]) -> float | None:
 
         duraciones.append(dias)
 
-        if not duraciones:
-            return None
+    if not duraciones:
+        return None
         
-        return sum(duraciones) / len(duraciones)
+    return sum(duraciones) / len(duraciones)
 
 def calculate_load_by_agent(tickets: list[dict]) -> dict[str, int]:
     """Calcula cuantos tickets tiene asignado cada agente.
